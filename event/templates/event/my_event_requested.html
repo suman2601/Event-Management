@@ -1,0 +1,31 @@
+{% extends "event/base.html" %}
+{% block content %}
+<a href="/my_event">My Events</a>
+<h1 style="text-align: center;">List of all the Events Requested by me</h1>
+<br />
+<br />
+<table class="table table-hover">
+    <thead class="thead-success">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Price-Money</th>
+            <th scope="col">Stating Date</th>
+            <th scope="col">Seats</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for events in objl %}
+        <tr>
+            <th scope="row"><a href="/event_details/{{events.id}}">{{events.id}}</a></th>
+            <td><a href="/event_details/{{events.id}}">{{events.title}}</a></td>
+            <td>{{events.pricemoney}}</td>
+            <td>{{events.StartingDate}}</td>
+            <td>{{events.numberofseats}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

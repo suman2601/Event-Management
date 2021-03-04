@@ -1,0 +1,34 @@
+{% extends "event/base.html" %}
+{% block content %}
+<a href="/my_event">My Events</a>
+<h1 style="text-align: center;">List of all Attended Events</h1>
+<br />
+<br />
+<table class="table table-hover">
+    <thead class="thead-success">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Certificate</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for a,b in mylist %}
+        <tr>
+            <th scope="row"><a href="/event_details/{{a.id}}">{{a.id}}</a></th>
+            <td><a href="/event_details/{{a.id}}">{{a.title}}</a></td>
+            <td>
+                <a href="{{b.certificate.url}}" target="_blank">{{b.certificate}}</a>
+            </td>
+            <td>
+                <a href="{{b.certificate.url}}" download>{{b.certificate}}</a>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}

@@ -1,0 +1,92 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+
+{% with name="India" %}
+<br />
+
+{% for e in eventdetail %}
+{% if e.id == eventid %}
+<h1 style="text-align: center;"><u>Users of <b>{{e.title}}</b> Event</u> </h1>
+{% endif %}
+{% endfor%}
+
+<br />
+<br />
+<table class="table table-striped">
+    <thead class="thead-success">
+        <tr>
+            <th scope="col">UserID</th>
+            <th scope="col">Confirmed Booking</th>
+            <th scope="col">Attended</th>
+            <th scope="col">Unbook</th>
+            <th scope="col">Add Certificate</th>
+            <!-- <th scope="col">Delete</th> -->
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for u in obj %}
+
+        <tr>
+            <th scope="row"><a href="#userprofile">{{u.userid}}</a></th>
+            <td>
+                <form action="/event_user/{{eventid}}/{{u.userid}}/conformed" method="POST">
+                    {%csrf_token%}
+
+                    {% if u.booking_confirmed %}
+
+                    <input type="submit" class="btn btn-success" name="conform" value="Conform Him"
+                        data-toggle="tooltip" title="Click here to confirm booking" disabled>
+                    {% else %}
+                    <input type="submit" class="btn btn-success" name="conform" value="Conform Him"
+                        data-toggle="tooltip" title="Click here to confirm booking">
+                    {% endif %}
+                </form>
+            </td>
+            <td>
+                <form action="/event_user/{{eventid}}/{{u.userid}}/attended" method="POST">
+                    {%csrf_token%}
+                    {% if u.attended %}
+                    <input type="submit" class="btn btn-primary" name="attended" value="Attended ?"
+                        data-toggle="tooltip" title="was user attend the event ? click here if TRUE " disabled>
+                    {%else%}
+                    <input type="submit" class="btn btn-primary" name="attended" value="Attended ?"
+                        data-toggle="tooltip" title="was user attend the event ? click here if TRUE ">
+                    {%endif%}
+                </form>
+            </td>
+            <td>
+                <form action="/event_user/{{eventid}}/{{u.userid}}/unbooked" method="POST">
+                    {%csrf_token%}
+                    <input type="submit" class="btn btn-danger" name="unbooked" value="UnBook Now" data-toggle="tooltip"
+                        title="Click here to Unbook user for this event">
+                </form>
+            </td>
+
+            <td>
+                <form id="form" enctype="multipart/form-data" action="/event_user/{{eventid}}/{{u.userid}}/certified"
+                    method="POST">
+                    {%csrf_token%}
+                    {% if u.certificate %}
+                    <input type="file" id="file" name="myfile" data-toggle="tooltip"
+                        title="Certificate already uploaded" disabled>
+                    <!-- <img src="{{u.certificate.url}}"> -->
+                    {% else %}
+                    <input type="file" id="file" name="myfile">
+                    {% endif %}
+                </form>
+            </td>
+
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    document.getElementById("file").onchange = function () {
+        document.getElementById("form").submit();
+    };
+</script>
+{% endwith %}
+{% endblock content %}

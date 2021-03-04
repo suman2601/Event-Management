@@ -1,0 +1,34 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+<h1 style="text-align: center;"><b>Update Event</b></h1>
+<br />
+<form action="/event_view/{{obj.id}}/updated" method="POST">
+    {%csrf_token%}
+    Organizer:<input type="text" name="organizer" placeholder="User namae of Organizer" value="{{obj.organizer}}"
+        required><br />
+    Title :<input type="text" name="event_title" placeholder="Title" value="{{obj.title}}" required><br />
+    Description :<input type="text" name="description" placeholder="Description" value="{{obj.description}}"
+        required><br />
+    Venue :<input type="text" name="venue" placeholder="venue" value="{{obj.venue}}" required><br />
+    Category :<input type="text" name="Category" placeholder="Category" value="{{obj.Category}}" required><br />
+    Starting date :<input type="datetime-local" id="startingdate" name="starting_date" placeholder="starting date"
+        value="{{obj.StartingDate}}" required><br />
+    Ending date<input type="datetime-local" id="endingdate" name="ending_date" placeholder="starting date"
+        value="{{obj.Endingdate}}" required><br />
+    Duration :<input type="time" name="duration" value="{{obj.Eventtime}}" required><br />
+    Joiningfees :<input type="number" name="fee" value="{{obj.joiningfees}}" required><br />
+    Price-money :<input type="number" name="price" value="{{obj.pricemoney}}" required><br />
+    Number of members per team :<input type="number" name="numberofparticipants" placeholder="number of participants"
+        value="{{obj.members}}" required><br />
+    Registration link :<input type="url" name="link" placeholder="Add Link" value="{{obj.link}}" required><br />
+    Number of Seats :<input type="number" name="numberofseats" placeholder="Total seats" value="{{obj.numberofseats}}"
+        required><br />
+    <br />
+    <input type="submit" name="Update" value="Update">
+</form>
+<script>
+    document.getElementById("startingdate").defaultValue = "{{ obj.StartingDate }}";
+    document.getElementById("endingdate").defaultValue = "{{ obj.Endingdate }}";
+</script>
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "event/base.html" %}
+{% block content %}
+
+<h1 style="text-align: center;"><b>Add Event</b></h1>
+<br />
+<form action="/event_view/" method="POST">
+    {%csrf_token%}
+    organizer:<input type="text" name="organizer" placeholder="User namae of Organizer" required><br />
+    title :<input type="text" name="event_title" placeholder="Title" required><br />
+    description :<input type="text" name="description" placeholder="Description" required><br />
+    venue :<input type="text" name="venue" placeholder="venue" required><br />
+    Category :<input type="text" name="Category" placeholder="Category" required><br />
+    Starting date :<input type="datetime-local" name="starting_date" placeholder="starting date" required><br />
+    Ending date<input type="datetime-local" name="ending_date" placeholder="starting date" required><br />
+    Duration :<input type="time" name="duration" required><br />
+    joiningfees :<input type="number" name="fee" required><br />
+    pricemoney :<input type="number" name="price" required><br />
+    Number of members per team :<input type="number" name="numberofparticipants" placeholder="number of participants"
+        required><br />
+    Registration link :<input type="url" name="link" placeholder="Add Link" required><br />
+    Number of Seats :<input type="number" name="numberofseats" placeholder="Total seats" required><br />
+    <br />
+    <input type="submit" name="Add" value="Add">
+</form>
+{% endblock content %}

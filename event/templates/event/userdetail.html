@@ -1,0 +1,29 @@
+{% extends "event/base.html" %}
+{% block content %}
+<div class="container-fluid">
+    <article class="media content-section">
+        <div class="media-body">
+            <!-- <div class="article-metadata">
+                <b>Id :{{obj.id}}</b>
+                <small style="float: right;">PostBy : <a
+                        href="/user_Details/{{obj.postby.username}}">{{obj.postby.username}}</a></small>
+                <br />
+            </div>
+            <h1 style="text-align: center;">{{ obj.title}}</a></h1>
+            Organizer :<p class="article-content">{{ obj.organizer }}</p>
+            Description:<p class="article-content">{{ obj.description }}</p>
+            joiningfees:<p class="article-content">{{ obj.joiningfees }}</p>
+            pricemoney:<p class="article-content">{{ obj.pricemoney }}</p>
+            Members: <p class="article-content">{{ obj.members }}</p>
+            link:<a class="article-content" href="{{ obj.link }}">{{ obj.link }}</a><br /><br />
+            Eventtime: <p class="article-content">{{ obj.Eventtime }}</p>
+            venue:<p class="article-content">{{ obj.venue }}</p>
+            Event Starting Date:<p class="article-content">{{ obj.StartingDate|date:"F d,Y" }}</p>
+            Event Ending Date:<p class="article-content">{{ obj.Endingdate|date:"F d,Y" }}</p>
+            Category:<p class="article-content">{{ obj.Category }}</p>
+            Number of Seats<p class="article-content">{{ obj.numberofseats }}</p> -->
+            User details of : {{obj.username}}
+        </div>
+    </article>
+</div>
+{% endblock content %}
