@@ -1,25 +1,35 @@
 {% extends "event/base.html" %}
 {% block content %}
 
-<h1 style="text-align: center;"><b>Add Event</b></h1>
-<br />
+<div class="content-section">
+    <fieldset class="form-group">
+    <legend class="border-bottom mb-4">Add Event</legend>
+
 <form action="/event_view/" method="POST">
     {%csrf_token%}
-    organizer:<input type="text" name="organizer" placeholder="User namae of Organizer" required><br />
-    title :<input type="text" name="event_title" placeholder="Title" required><br />
-    description :<input type="text" name="description" placeholder="Description" required><br />
-    venue :<input type="text" name="venue" placeholder="venue" required><br />
-    Category :<input type="text" name="Category" placeholder="Category" required><br />
-    Starting date :<input type="datetime-local" name="starting_date" placeholder="starting date" required><br />
-    Ending date<input type="datetime-local" name="ending_date" placeholder="starting date" required><br />
-    Duration :<input type="time" name="duration" required><br />
-    joiningfees :<input type="number" name="fee" required><br />
-    pricemoney :<input type="number" name="price" required><br />
-    Number of members per team :<input type="number" name="numberofparticipants" placeholder="number of participants"
+    Organizer:<input type="text" name="organizer" placeholder="User namae of Organizer" class="textinput textInput form-control" required><br />
+    Title :<input type="text" name="event_title" placeholder="Title" required class="textinput textInput form-control" > <br />
+    Description :<input type="text" name="description" class="textinput textInput form-control" placeholder="Description" required><br />
+    Venue :<input type="text" name="venue" placeholder="venue" required class="textinput textInput form-control" ><br />
+    Category :<input type="text" name="Category" placeholder="Category" required class="textinput textInput form-control" ><br />
+    Starting date :<input type="datetime-local" class="textinput textInput form-control" name="starting_date" placeholder="starting date" required><br />
+    Ending date<input type="datetime-local" class="textinput textInput form-control" name="ending_date" placeholder="starting date" required><br />
+    Duration :<input class="textinput textInput form-control" type="time" name="duration" required><br />
+    JoiningFees :<input type="number" name="fee" required class="textinput textInput form-control" ><br />
+    PriceMoney :<input type="number" name="price" class="textinput textInput form-control"  required><br />
+    Number of members per team :<input type="number" class="textinput textInput form-control" name="numberofparticipants" placeholder="number of participants"
         required><br />
-    Registration link :<input type="url" name="link" placeholder="Add Link" required><br />
-    Number of Seats :<input type="number" name="numberofseats" placeholder="Total seats" required><br />
+    Registration link :<input type="url" name="link" class="textinput textInput form-control" placeholder="Add Link" required><br />
+    Number of Seats :<input type="number" name="numberofseats" class="textinput textInput form-control" placeholder="Total seats" required><br />
     <br />
-    <input type="submit" name="Add" value="Add">
+</fieldset>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit" name="Add">Add</button>
+    </div>
+
+
+
 </form>
+
 {% endblock content %}
+</div
