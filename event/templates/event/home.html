@@ -1,31 +1,65 @@
 {% extends "event/base.html" %}
 {% block content %}
-<a href="my_event">My Events</a>
+
+{%ifequal user.profile.usertype "Organizer" %}
+{% include 'event/event_view.html'%}
+{%else%}
+
+<style>
+  .user-list tbody td>img {
+    position: relative;
+    border-radius: 50%;
+    width: 100px;
+    height: 60px;
+    border: 1px solid #ffffff;
+    max-width: 60px;
+    float: left;
+    margin-right: 15px;
+  }
+
+  .user-list tbody td .user-link {
+    display: block;
+    font-size: 1.25em;
+    padding-top: 3px;
+    margin-left: 60px;
+  }
+
+  .user-list tbody td .user-subhead {
+    font-size: 0.875em;
+    font-style: italic;
+  }
+
+
+  a:hover {
+    text-decoration: none;
+  }
+</style>
 <h1 style="text-align: center;">List of all the Events</h1>
 <br />
 <br />
-<table class="table table-hover">
+<table class="table table-hover user-list">
   <thead class="thead-success">
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">Title</th>
-      <th scope="col">Price-Money</th>
+      <th scope="col" style="text-align: center;">User</th>
+      <th scope="col" style="text-align: center;">Title</th>
       <th scope="col">Stating Date</th>
-      <th scope="col">Seats</th>
     </tr>
   </thead>
   <tbody>
     {% for events in eventlist %}
     <tr>
-      <th scope="row"><a href="/event_details/{{events.id}}">{{events.id}}</a></th>
-      <td><a href="/event_details/{{events.id}}">{{events.title}}</a></td>
-      <td>{{events.pricemoney}}</td>
+      <td>
+        <img src="{{events.postby.profile.image.url}}" alt="profilepic">
+        <a href="/user_Details/{{events.postby.username}}" class="user-link">{{events.postby.username}}</a>
+        <span class="user-subhead">{{events.postby.profile.idnumber}}</span>
+      </td>
+      <td><a href="/event_details/{{events.id}}" class="user-link">{{events.title}}</a></td>
       <td>{{events.StartingDate}}</td>
-      <td>{{events.numberofseats}}</td>
     </tr>
     {% endfor %}
 
   </tbody>
 </table>
 
+{%endifequal%}
 {% endblock content %}

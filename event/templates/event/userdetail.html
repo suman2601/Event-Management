@@ -1,29 +1,146 @@
-{% extends "event/base.html" %}
-{% block content %}
-<div class="container-fluid">
-    <article class="media content-section">
-        <div class="media-body">
-            <!-- <div class="article-metadata">
-                <b>Id :{{obj.id}}</b>
-                <small style="float: right;">PostBy : <a
-                        href="/user_Details/{{obj.postby.username}}">{{obj.postby.username}}</a></small>
-                <br />
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'event/main.css' %}">
+
+    {% if title %}
+    <title>Event Management - {{title}} </title>
+    {% else %}
+    <title>Event Management </title>
+    {% endif %}
+</head>
+
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="{% url 'event-home' %}">Event Management</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{% url 'event-home' %}">Home</a>
+                        {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                        {% endif %}
+                        <a class="nav-item nav-link" href="{% url 'event-about' %}">About</a>
+
+                    </div>
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+
+                        <div class="input-group">
+                            <form action="/" method="get">
+                                <div class="form-outline" style="display: inline-flex;">
+                                    <input type="search" name="query" id="query" placeholder="Search Event"
+                                        class="form-control" />&nbsp;&nbsp;&nbsp;
+                                    <input type="submit" class="btn btn-success" value="Search">
+                                </div>
+                            </form>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+
+                        {% if user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                        {% else %}
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+                        <a class="nav-item nav-link" href="{% url 'users-register' %}">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-            <h1 style="text-align: center;">{{ obj.title}}</a></h1>
-            Organizer :<p class="article-content">{{ obj.organizer }}</p>
-            Description:<p class="article-content">{{ obj.description }}</p>
-            joiningfees:<p class="article-content">{{ obj.joiningfees }}</p>
-            pricemoney:<p class="article-content">{{ obj.pricemoney }}</p>
-            Members: <p class="article-content">{{ obj.members }}</p>
-            link:<a class="article-content" href="{{ obj.link }}">{{ obj.link }}</a><br /><br />
-            Eventtime: <p class="article-content">{{ obj.Eventtime }}</p>
-            venue:<p class="article-content">{{ obj.venue }}</p>
-            Event Starting Date:<p class="article-content">{{ obj.StartingDate|date:"F d,Y" }}</p>
-            Event Ending Date:<p class="article-content">{{ obj.Endingdate|date:"F d,Y" }}</p>
-            Category:<p class="article-content">{{ obj.Category }}</p>
-            Number of Seats<p class="article-content">{{ obj.numberofseats }}</p> -->
-            User details of : {{obj.username}}
+        </nav>
+    </header>
+    <br>
+    <br>
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+
+            </div>
+            <div class="col-md-10">
+                <div class="content-section">
+                    <br><br><br>
+                    <section class="mb-5">
+                        <div class="row">
+                            <div class="col-md-7 mb-4 mb-md-0">
+                                <div class="mdb-lightbox">
+                                    <div class="row product-gallery mx-1">
+                                        <div class="col-12 mb-0">
+                                            <figure class="view overlay rounded z-depth-1 main-img">
+                                                <a href="{{obj.profile.idcard.url}}" data-size="710x823">
+                                                    <img src="{{obj.profile.idcard.url}}" class="img-fluid z-depth-1">
+                                                </a>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <h5>Username : {{obj.username}} </h5>
+                                <p class="mb-2 text-muted small">{{obj.email}}</p>
+                                <p><span class="mr-1"><strong>About :</strong></span></p>
+                                <p class="pt-0">{{obj.profile.about}}</p>
+                                <div class="table-responsive">
+                                    <table class="table table-md table-borderless mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th class="pl-0 w-25" scope="row"><strong>CollegeID</strong></th>
+                                                <td>{{obj.profile.idnumber}}</td>
+                                            </tr>
+                                            {%ifequal obj.profile.usertype "Organizer" %}
+                                            <tr>
+                                                <th class="pl-0 w-25" scope="row"><strong>Evnets Post</strong></th>
+                                                <td>{{total}}</td>
+                                            </tr>
+                                            {%else%}
+                                            <tr>
+                                                <th class="pl-0 w-25" scope="row"><strong>Attened Event</strong></th>
+                                                <td>{{count}}</td>
+                                            </tr>
+                                            {%endifequal%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
         </div>
-    </article>
-</div>
-{% endblock content %}
+    </main>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

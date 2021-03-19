@@ -1,6 +1,4 @@
-{% extends "event/base.html" %}
-{% block content %}
-<a href="/event_view/add">ADD Event</a><br />
+<br />
 
 <br />
 <br />
@@ -11,19 +9,22 @@
       <th scope="col">Title</th>
       <th scope="col">Category</th>
       <th scope="col">Stating Date</th>
+      <th scope="col">View</th>
       <th scope="col">Update</th>
       <th scope="col">Delete</th>
+
     </tr>
   </thead>
   <tbody>
-    {% for events in obj %}
+    {% for events in eventlist %}
     <tr>
       <th scope="row"><a href="/event_user/{{events.id}}">{{events.id}}</a></th>
       <td><a href="/event_user/{{events.id}}">{{events.title}}</a></td>
       <td>{{events.Category}}</td>
       <td>{{events.StartingDate|date:"F d,Y"}}</td>
+      <th scope="row"><a href="/event_details/{{events.id}}" class="btn btn-info">View</a></th>
       <td>
-        <form action="/event_view/{{events.id}}/update" method="POST">
+        <form action="/event_view/{{events.id}}/update" method="POST" target="_blank">
           {%csrf_token%}
           <input type="submit" class="btn btn-success" name="Update" value="Update">
         </form>
@@ -39,5 +40,3 @@
 
   </tbody>
 </table>
-
-{% endblock content %}

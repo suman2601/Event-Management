@@ -1,6 +1,3 @@
-{% extends "event/base.html" %}
-{% block content %}
-<a href="/my_event">My Events</a>
 <h1 style="text-align: center;">List of all Conformed Events</h1>
 <br />
 <br />
@@ -15,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for events in objl %}
+        {% for events in obj2 %}
         <tr>
             <th scope="row"><a href="/event_details/{{events.id}}">{{events.id}}</a></th>
             <td><a href="/event_details/{{events.id}}">{{events.title}}</a></td>
@@ -27,5 +24,3 @@
 
     </tbody>
 </table>
-
-{% endblock content %}

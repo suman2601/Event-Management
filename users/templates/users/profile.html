@@ -3,7 +3,6 @@
 
 <!-- <div class="content-section">
 
-
   <div class="media">
     <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
     <div class="media-body">
@@ -34,7 +33,7 @@
   {% else %}
   <title>Event Management </title>
   {% endif %}
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
   <style type="text/css">
     body {
       margin: 0;
@@ -109,15 +108,20 @@
   </style>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="{% static 'event/main.css' %}">
 
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"></script>
   <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-  <script type="text/javascript"></script>
-
 </head>
 
 <body>
+
+  {% if check %}
   <header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
       <div class="container">
@@ -129,11 +133,11 @@
         <div class="collapse navbar-collapse" id="navbarToggle">
           <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" href="{% url 'event-home' %}">Home</a>
-            <a class="nav-item nav-link" href="{% url 'event-about' %}">About</a>
-            <a class="nav-item nav-link" href="{% url 'event-view' %}">Event</a>
+
             {% if user.is_authenticated %}
             <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
             {% endif %}
+            <a class="nav-item nav-link" href="{% url 'event-about' %}">About</a>
           </div>
           <!-- Navbar Right Side -->
           <div class="navbar-nav">
@@ -148,7 +152,8 @@
       </div>
     </nav>
   </header>
-
+  {%endif %}
+  {% load crispy_forms_tags %}
 
   <div class="container">
     <div class="row gutters">
@@ -161,13 +166,17 @@
                   <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
                 </div>
                 <h4 class="user-name">{{ user.username }}</h4>
+                {% if check %}
+                <h6 class="user-email">{{ user.profile.usertype }}</h6>
+                {%else%}
                 <h6 class="user-email">{{ user.email }}</h6>
+                {%endif%}
               </div>
               <div class="about">
                 <h5>About</h5>
-                <p>I'm Darshan. Full Stack Designer I enjoy creating user-centric, delightful and human
-                  experiences.</p>
+                <p>{{ user.profile.about }}</p>
               </div>
+
             </div>
           </div>
         </div>
@@ -175,41 +184,153 @@
       <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
         <div class="card h-100">
           <div class="card-body">
-            <form method="POST" enctype="multipart/form-data">
-              {% csrf_token %}
-              <fieldset class="form-group">
 
+            <div class="container">
+
+              {%ifequal user.profile.usertype "Organizer" %}
+              <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <fieldset class="form-group">
+
+                  <div class="row gutters">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <h6 class="mb-2 text-primary">Personal Details</h6>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        {%if not check %}
+                        {{p_form.usertype |as_crispy_field}}
+                        {%endif%}
+                        {{ u_form|crispy }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row gutters">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      {{p_form.idnumber |as_crispy_field}}
+                      {{p_form.image |as_crispy_field}}
+                      {{p_form.idcard |as_crispy_field}}
+                      {{p_form.about |as_crispy_field}}
+                    </div>
+                  </div>
+                </fieldset>
                 <div class="row gutters">
                   <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mb-2 text-primary">Personal Details</h6>
-                  </div>
-                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                     <div class="form-group">
-                      {{ u_form|crispy }}
+                      <button class="btn btn-outline-info" type="submit">Update</button>
                     </div>
                   </div>
                 </div>
+              </form>
+              {%else%}
+              <!-- Nav tabs -->
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
 
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                    type="button" role="tab" aria-controls="home" aria-selected="true">Details</button>
+                </li>
 
-                <div class="row gutters">
-                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    {{ p_form|crispy }}
-                  </div>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
+                    role="tab" aria-controls="profile" aria-selected="false">Requested Event</button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
+                    type="button" role="tab" aria-controls="messages" aria-selected="false">Conformed Event</button>
+                </li>
+
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings"
+                    type="button" role="tab" aria-controls="settings" aria-selected="false">Attended Event</button>
+                </li>
+              </ul>
+              <!-- Tab panes -->
+              <div class="tab-content">
+
+                <!-- Profile Section with user details -->
+                <div class="tab-pane active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <br> <br>
+                  <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+
+                      <div class="row gutters">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                          <h6 class="mb-2 text-primary">Personal Details</h6>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                          <div class="form-group">
+                            {%if not check %}
+                            {{p_form.usertype |as_crispy_field}}
+                            {%endif%}
+                            {{ u_form|crispy }}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row gutters">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                          {{p_form.idnumber |as_crispy_field}}
+                          {{p_form.image |as_crispy_field}}
+                          {{p_form.idcard |as_crispy_field}}
+                          {{p_form.about |as_crispy_field}}
+                        </div>
+                      </div>
+                    </fieldset>
+                    <div class="row gutters">
+                      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="form-group">
+                          <button class="btn btn-outline-info" type="submit">Update</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
                 </div>
-              </fieldset>
-              <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                  <div class="form-group">
-                    <button class="btn btn-outline-info" type="submit">Update</button>
-                  </div>
+
+                <!-- Requested Event -->
+                <div class="tab-pane" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                  <br> <br>
+                  {% include "event/my_event_requested.html" %}
+                </div>
+
+                <!-- Comformed Evnet -->
+                <div class="tab-pane" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+                  <br> <br>
+                  {% include "event/my_event_conformed.html" %}
+                </div>
+
+                <!-- Event Certifiacte -->
+                <div class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                  <br> <br>
+                  {% include "event/my_event_attended.html" %}
                 </div>
               </div>
-            </form>
+              {%endifequal%}
+
+            </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
+
+
+  <script>
+    var triggerTabList = [].slice.call(document.querySelectorAll('#myTab a'))
+    triggerTabList.forEach(function (triggerEl) {
+      var tabTrigger = new bootstrap.Tab(triggerEl)
+
+      triggerEl.addEventListener('click', function (event) {
+        event.preventDefault()
+        tabTrigger.show()
+      })
+    })
+  </script>
 </body>
 
 </html>

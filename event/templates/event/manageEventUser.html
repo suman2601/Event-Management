@@ -16,7 +16,8 @@
 <table class="table table-striped">
     <thead class="thead-success">
         <tr>
-            <th scope="col">UserID</th>
+            <th scope="col">#</th>
+            <th scope="col">User</th>
             <th scope="col">Confirmed Booking</th>
             <th scope="col">Attended</th>
             <th scope="col">Unbook</th>
@@ -26,10 +27,11 @@
     </thead>
     <tbody>
 
-        {% for u in obj %}
+        {% for u,z in mylist %}
 
         <tr>
-            <th scope="row"><a href="#userprofile">{{u.userid}}</a></th>
+            <th scope="row"><a href="/user_Details/{{z.username}}">{{z.id}}</a></th>
+            <th scope="row"><a href="/user_Details/{{z.username}}">{{z.username}}</a></th>
             <td>
                 <form action="/event_user/{{eventid}}/{{u.userid}}/conformed" method="POST">
                     {%csrf_token%}

@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-# from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-
+from django.urls import reverse
 from .models import Eventlist, EventBook
 
 # from event.form import EventForm
@@ -12,43 +12,59 @@ from .models import Eventlist, EventBook
 # Create your views here.
 
 
+@login_required
 def home(request):
+
+    requser = request.user
+    if requser.profile.usertype == "Organizer":
+        if request.method == 'POST':
+            postby = request.user
+            event_title = request.POST['event_title']
+            category = request.POST['Category']
+            description = request.POST['description']
+            organizer = request.POST['organizer']
+            venue = request.POST['venue']
+            starting_date = request.POST['starting_date']
+            ending_date = request.POST['ending_date']
+            duration = request.POST['duration']
+            fee = request.POST['fee']
+            price = request.POST['price']
+            numberofparticipants = request.POST['numberofparticipants']
+            link = request.POST['link']
+            numberofseats = request.POST['numberofseats']
+
+            obj = Eventlist(postby=postby, title=event_title, description=description, organizer=organizer, joiningfees=fee, pricemoney=price, members=numberofparticipants,
+                            link=link, Eventtime=duration, venue=venue, StartingDate=starting_date, Endingdate=ending_date, Category=category, numberofseats=numberofseats)
+            obj.save()
+            return redirect('/')
+        else:
+            if request.method == 'GET':
+                query = request.GET.get('query')
+                if query is None:
+                    eventlist = Eventlist.objects.filter(
+                        postby=requser).order_by('-StartingDate')
+                else:
+                    eventlist = Eventlist.objects.filter(
+                        title__icontains=query, postby=requser)
+            else:
+                eventlist = Eventlist.objects.filter(
+                    postby=requser).order_by('-StartingDate')
+    else:
+        if request.method == 'GET':
+            query = request.GET.get('query')
+            if query is None:
+                eventlist = Eventlist.objects.all().order_by('-StartingDate')
+            else:
+                eventlist = Eventlist.objects.filter(title__icontains=query)
+        else:
+            eventlist = Eventlist.objects.all().order_by('-StartingDate')
+
     context = {
-        'eventlist': Eventlist.objects.all().order_by('StartingDate')
+        'eventlist': eventlist
     }
     return render(request, 'event/home.html', context)
 
-
-@login_required
-def event_view(request):
-    if request.method == 'POST':
-        postby = request.user
-        event_title = request.POST['event_title']
-        category = request.POST['Category']
-        description = request.POST['description']
-        organizer = request.POST['organizer']
-        venue = request.POST['venue']
-        starting_date = request.POST['starting_date']
-        ending_date = request.POST['ending_date']
-        duration = request.POST['duration']
-        fee = request.POST['fee']
-        price = request.POST['price']
-        numberofparticipants = request.POST['numberofparticipants']
-        link = request.POST['link']
-        numberofseats = request.POST['numberofseats']
-
-        obj = Eventlist(postby=postby, title=event_title, description=description, organizer=organizer, joiningfees=fee, pricemoney=price, members=numberofparticipants,
-                        link=link, Eventtime=duration, venue=venue, StartingDate=starting_date, Endingdate=ending_date, Category=category, numberofseats=numberofseats)
-
-        obj.save()
-        return redirect('/')
-    else:
-        requser = request.user
-        obj1 = Eventlist.objects.filter(postby=requser)
-        # # print(obj1)
-        return render(request, 'event/event_view.html', {'obj': obj1})
-
-
+# CRUD on Event
 @login_required
 def event_add(request):
     return render(request, 'event/event_add.html', {})
@@ -82,10 +98,6 @@ def event_delete(request, my_id):
     return redirect('/event_view')
 
 
-def about(request):
-    return render(request, 'event/about.html', {'title': 'About'})
-
-
 def event_details(request, my_id):
     obj = Eventlist.objects.get(id=my_id)
     uid = request.user.id
@@ -93,20 +105,38 @@ def event_details(request, my_id):
         obj1 = EventBook.objects.get(eventid=my_id, userid=uid)
     except EventBook.DoesNotExist:
         obj1 = None
-
     return render(request, 'event/event_details.html', {'obj': obj, 'obj1': obj1})
 
 
 def user_details(request, username):
     obj = User.objects.get(username=username)
-    return render(request, 'event/userdetail.html', {'obj': obj})
+    obj1 = Eventlist.objects.filter(postby=obj)
+    obj2 = EventBook.objects.filter(userid=obj.id)
+    count = 0
+    for x in obj2:
+        if x.attended:
+            count += 1
+    total = len(obj1)
+    return render(request, 'event/userdetail.html', {'obj': obj, 'total': total, 'count': count})
+
+
+def event_user(request, event_id):
+    obj = EventBook.objects.filter(eventid=event_id)
+    eventdetail = Eventlist.objects.filter(id=event_id)
+    userdetail = []
+    for x in obj:
+        temp = User.objects.get(id=x.userid)
+        userdetail.append(temp)  # list of user object for this event
+    eventid = event_id
+    mylist = zip(obj, userdetail)
+    return render(request, 'event/manageEventUser.html', {'obj': obj, 'eventdetail': eventdetail, 'userdetail': userdetail, 'eventid': eventid, 'mylist': mylist})
 
 
 @login_required
 def book_request(request, e_id):
     requsrid = request.user.id
     obj = EventBook.objects.filter(userid=requsrid, eventid=e_id)
-# if empty then and then add new obj
+    # if empty then and then add new obj
     if obj:
         return redirect('/')
     else:
@@ -114,15 +144,7 @@ def book_request(request, e_id):
         book = True
         obj = EventBook(userid=requsrid, eventid=eventid, booking=book)
         obj.save()
-        return redirect('/')
-
-
-def event_user(request, event_id):
-    obj = EventBook.objects.filter(eventid=event_id)
-    eventdetail = Eventlist.objects.filter(id=event_id)
-    userdetail = User.objects.filter()
-    eventid = event_id
-    return render(request, 'event/manageEventUser.html', {'obj': obj, 'eventdetail': eventdetail, 'userdetail': userdetail, 'eventid': eventid})
+        return HttpResponseRedirect(reverse('event_details', args=[str(e_id)]))
 
 
 def event_user_conformation(request, event_id, user_id):
@@ -153,10 +175,7 @@ def event_user_certified(request, event_id, user_id):
     return redirect('event_user', event_id=str(event_id))
 
 
-def my_event(request):
-    return render(request, 'event/myevent.html')
-
-
+# User Profile section (Done!)
 def my_event_requested(request):
     uid = request.user.id
     obj = EventBook.objects.filter(userid=uid, booking=True)
@@ -191,3 +210,7 @@ def my_event_attended(request):
     for x in obj:
         print(x.certificate.url)
     return render(request, 'event/my_event_attended.html', {'mylist': mylist})
+
+
+def about(request):
+    return render(request, 'event/about.html', {'title': 'About'})

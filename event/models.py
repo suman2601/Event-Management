@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 
 class Eventlist(models.Model):
     postby = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    thumbnail = models.ImageField(
+        default='event.jpg', null=True, blank=True, upload_to='events_thumbnail')
     title = models.CharField(max_length=100)
     description = models.TextField()
     organizer = models.CharField(max_length=100)
@@ -34,4 +36,4 @@ class EventBook(models.Model):
         default='coming_soon.jpg', null=True, blank=True, upload_to='certificates')
 
     def __str__(self):
-        return f'user id : {self.userid}'
+        return "Event : "+self.eventid+" booked by "+"user " + self.userid

@@ -24,4 +24,6 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['idnumber', 'image', 'idcard']
+        fields = ['idnumber', 'image', 'idcard', 'usertype', 'about']
+        widgets = {
+            'usertype': forms.RadioSelect()}
