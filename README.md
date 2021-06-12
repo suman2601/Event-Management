@@ -27,5 +27,3 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
-
-Video Link : Cooming Soon
